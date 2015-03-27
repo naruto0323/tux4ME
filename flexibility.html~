@@ -1,0 +1,126 @@
+<!doctype html> 
+<html lang="en"> 
+    <head> 
+        <meta charset="UTF-8" />
+        <script type="text/javascript" src="phaser.js"></script>
+        <style type="text/css">
+            body {
+                margin: 2%;
+            }
+        </style>
+    </head>
+    <body>
+    <p> An example demo for flexibilty game
+    <br>
+    Here ball is samll fish and two blue metal are sharks where we can replace the images and background and egg is chilli
+    <br> Use left and right arrow for direction change and up arroe for forward movement <br>
+    suddenly the controls changes and he have adopt to them every time.(this part still under implementation :P!!!!)
+    </p>
+    
+    <script type="text/javascript">
+        
+      // Snake by Patrick OReilly and Richard Davey
+// Twitter: @pato_reilly Web: http://patricko.byethost9.com
+
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update,render : render });
+
+function preload() {
+
+    game.load.image('ball','assets/sprites/shinyball.png');
+game.load.spritesheet('spinner', 'assets/sprites/bluemetal_32x32x4.png', 32, 32);
+    game.load.spritesheet('veggies', 'assets/sprites/fruitnveg32wh37.png', 32, 32);
+
+}
+
+var snakeHead; //let it be small fish
+var sprites;   // let it be sharks
+var group;     /// let it be eggg
+function create() {
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+
+
+
+    cursors = game.input.keyboard.createCursorKeys();
+    game.physics.startSystem(Phaser.Physics.P2JS);
+
+		snakeHead = game.add.physicsGroup(Phaser.Physics.ARCADE);
+
+    snakeHead = game.add.sprite(400, 300, 'ball');
+    snakeHead.anchor.setTo(0.5, 0.5);
+
+    game.physics.enable(snakeHead, Phaser.Physics.ARCADE);
+    
+	 group = game.add.group();
+    group.enableBody = true;
+    group.physicsBodyType = Phaser.Physics.ARCADE;
+    snakeHead.body.collideWorldBounds = true;
+    snakeHead.body.bounce.set(0.0);
+	sprites = game.add.physicsGroup(Phaser.Physics.ARCADE);
+/// for number of sharks
+	for (var i = 0; i < 2; i++)
+	{
+		var s = sprites.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(32, 200), 'spinner');
+		s.animations.add('spin', [0, 1, 2, 3]);
+		s.play('spin', 20, true);
+		s.body.velocity.set(game.rnd.integerInRange(-200, 200), game.rnd.integerInRange(-200, 200));
+	}
+///for sharks collision with walls
+	sprites.setAll('body.collideWorldBounds', true);
+	sprites.setAll('body.bounce.x', 1);
+	sprites.setAll('body.bounce.y', 1);
+ var c = group.create(game.rnd.integerInRange(100, 770), game.rnd.integerInRange(0, 570), 'veggies', 17);
+        c.body.immovable = true;
+}
+
+function update() {
+///for shark eating small fish
+    game.physics.arcade.collide(snakeHead, sprites, collisionHandler, null, this);
+/// for small fish eating egg
+    game.physics.arcade.collide(group,snakeHead, collisionHandlere, null, this);
+    snakeHead.body.velocity.setTo(0, 0);
+    snakeHead.body.angularVelocity = 0;
+
+    if (cursors.up.isDown)
+    {
+        snakeHead.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(snakeHead.angle, 300));
+
+  
+    }
+
+    if (cursors.left.isDown)
+    {
+        snakeHead.body.angularVelocity = -300;
+    }
+    else if (cursors.right.isDown)
+    {
+        snakeHead.body.angularVelocity = 300;
+    }
+game.physics.arcade.collide(snakeHead);
+
+}
+function collisionHandler (player, veg) {
+
+
+        player.kill();
+
+
+}
+function collisionHandlere (player, veg) {
+
+
+        veg.kill();
+
+
+}
+
+function render() {
+
+    game.debug.spriteInfo(snakeHead, 32, 32);
+	game.physics.arcade.collide(sprites);
+
+}
+    </script>
+ 
+    </body>
+</html>
+
