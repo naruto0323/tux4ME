@@ -1,0 +1,115 @@
+<!doctype html> 
+<html lang="en"> 
+    <head> 
+        <meta charset="UTF-8" />
+        <script type="text/javascript" src="phaser.js"></script>
+        <style type="text/css">
+            body {
+                margin: 2%;
+            }
+        </style>
+    </head>
+    <body>
+<p> Here ball will be time bomb and one of the robots will steal the bomb and run in any direction for demo purpose i have considered only one direction its still under implementation and the kid have to point out the correct robot and have to diffuse <br>
+it> After stealing the bomb wont be visible.
+</p> 
+    <script type="text/javascript">
+    
+
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
+
+function preload() {
+    game.load.atlasJSONHash('bot', 'assets/sprites/running_bot.png', 'assets/sprites/running_bot.json');
+    game.load.atlasJSONHash('bot1', 'assets/sprites/running_bot.png', 'assets/sprites/running_bot.json');    
+game.load.atlasJSONHash('bot2', 'assets/sprites/running_bot.png', 'assets/sprites/running_bot.json');
+    game.load.image('ball','assets/sprites/shinyball.png');
+}
+
+var bot;
+var bot1;
+var bot2;
+var snakeHead;
+var flag=4;
+function create() {
+
+    //  This sprite is using a texture atlas for all of its animation data
+var x=game.rnd.integerInRange(0,2);
+list=[100,400,700];
+    snakeHead = game.add.sprite(list[x], 200, 'ball'); //let it be fish for now
+ game.input.onDown.add(changeFrame, this);
+//bot = gae.add.sprite(200, 200, 'bot');
+    
+    //  Here w0 add a new animation called ']run'
+  //  We haven't specified any frames because it's using every frame in the texture atlas
+    //bot.animations.add('run');
+
+   //  And this starts the animation playing by using its key ("run")
+    //  15 is the frame rate (15fps)
+    //  true means it will loop when it finishes
+  // bot.animations.play('run', 15, true);
+
+
+}
+function changeFrame() {
+
+    snakeHead.kill();
+if(flag==2)
+{
+}
+else
+{
+flag=1;
+}
+
+}
+function update() {
+if(flag==1)
+{
+bot = game.add.sprite(100, 200, 'bot');    
+
+bot.animations.add('run');
+bot.animations.play('run', 15, true);
+  
+   bot1 = game.add.sprite(400, 200, 'bot');    
+
+bot1.animations.add('run');
+bot1.animations.play('run', 15, true);
+    bot2 = game.add.sprite(700, 200, 'bot');
+bot2.animations.add('run');
+bot2.animations.play('run', 15, true);
+flag=2
+
+}
+if(flag==2)
+{
+ bot.x -= 2;
+
+    if (bot.x < -bot.width)
+    {
+        bot.x = game.world.width;
+    }
+bot1.x -= 2;
+
+    if (bot1.x < -bot.width)
+    {
+        bot1.x = game.world.width;
+    }
+bot2.x -= 2;
+
+    if (bot2.x < -bot.width)
+    {
+        bot2.x = game.world.width;
+    }
+}
+
+
+}
+
+
+
+
+
+    </script>
+    </body>
+</html>
+
